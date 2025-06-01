@@ -12,10 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.taskbackend1.model.Department;
 import com.taskbackend1.model.Employee;
 import com.taskbackend1.model.Skill;
+import com.taskbackend1.model.Wing;
+import com.taskbackend1.repository.DepartmentRepository;
 import com.taskbackend1.repository.EmployeeRepository;
 import com.taskbackend1.repository.SkillRepository;
+import com.taskbackend1.repository.WingRepository;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -27,9 +31,24 @@ public class EmployeeController {
 
     @Autowired
     private SkillRepository skillRepo;
+    
+    @Autowired
+    private WingRepository wingRepo;
+
+    @Autowired
+    private DepartmentRepository deptRepo;
+
+
 
     @PostMapping
     public Employee saveEmployee(@RequestBody Employee employee) {
+    	
+    	Wing wing = wingRepo.findById(employee.getWing().getId()).orElseThrow();
+        Department dept = deptRepo.findById(employee.getDepartment().getId()).orElseThrow();
+        employee.setWing(wing);
+        employee.setDepartment(dept);
+
+    	
         List<Skill> fullSkills = employee.getSkills().stream()
             .map(s -> skillRepo.findById(s.getId()).orElseThrow())
             .toList();

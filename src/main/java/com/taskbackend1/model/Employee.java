@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
+import com.taskbackend1.model.Department;
+import com.taskbackend1.model.Wing;
+
 
 @Entity
 @Data
@@ -29,4 +32,13 @@ public class Employee {
         inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
     private List<Skill> skills;
+    
+    @ManyToOne
+    @JoinColumn(name = "wing_id")
+    private Wing wing;
+    
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+
 }
