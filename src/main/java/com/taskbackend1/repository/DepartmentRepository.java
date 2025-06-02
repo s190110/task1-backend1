@@ -9,4 +9,6 @@ import com.taskbackend1.model.Department;
 
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
     List<Department> findByWingId(Long wingId);
+    
+    
 }

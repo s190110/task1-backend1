@@ -3,6 +3,7 @@ package com.taskbackend1.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.taskbackend1.model.Department;
 import com.taskbackend1.model.Employee;
+import com.taskbackend1.model.Experience;
 import com.taskbackend1.model.Skill;
 import com.taskbackend1.model.Wing;
 import com.taskbackend1.repository.DepartmentRepository;
@@ -41,21 +43,32 @@ public class EmployeeController {
 
 
     @PostMapping
-    public Employee saveEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+    	
+    	System.out.println("hello loeksh ");
+    	
+//    +employee.getWing().getId());
+    	
     	
     	Wing wing = wingRepo.findById(employee.getWing().getId()).orElseThrow();
-        Department dept = deptRepo.findById(employee.getDepartment().getId()).orElseThrow();
-        employee.setWing(wing);
-        employee.setDepartment(dept);
-
+    	Department dept = deptRepo.findById(employee.getDepartment().getId()).orElseThrow();
+    	employee.setWing(wing);
+    	employee.setDepartment(dept);
     	
         List<Skill> fullSkills = employee.getSkills().stream()
             .map(s -> skillRepo.findById(s.getId()).orElseThrow())
             .toList();
+        
+        if (employee.getExperiences() != null) {
+            for (Experience exp : employee.getExperiences()) {
+                exp.setEmployee(employee); 
+            }
+        }
+        employee.setTotalExperience(employee.getTotalExperience());
 
         employee.setSkills(fullSkills);
-        return employeeRepo.save(employee);
-    }
+        Employee savedEmployee = employeeRepo.save(employee);
+        return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);    }
 
     @GetMapping
     public List<Employee> getEmployees() {
