@@ -50,14 +50,17 @@ public class EmployeeController {
 //    +employee.getWing().getId());
     	
     	
-    	Wing wing = wingRepo.findById(employee.getWing().getId()).orElseThrow();
+    	Wing wing = wingRepo.findById(employee.getWing().getId())
+    	        .orElseThrow(() -> new RuntimeException("Wing not found"));
     	Department dept = deptRepo.findById(employee.getDepartment().getId()).orElseThrow();
     	employee.setWing(wing);
     	employee.setDepartment(dept);
     	
-        List<Skill> fullSkills = employee.getSkills().stream()
-            .map(s -> skillRepo.findById(s.getId()).orElseThrow())
-            .toList();
+    	List<Skill> fullSkills = employee.getSkills().stream()
+    		    .map(s -> skillRepo.findById(s.getId())
+    		        .orElseThrow(() -> new RuntimeException("Skill not found: " + s.getId())))
+    		    .toList();
+
         
         if (employee.getExperiences() != null) {
             for (Experience exp : employee.getExperiences()) {
