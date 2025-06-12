@@ -21,6 +21,16 @@ public class SkillController {
         return skillRepo.findAll();
     }
 
+//    @GetMapping
+//	public ResponseEntity<Map<String, Object>> getSkills() {
+//		List<Skill> all = skillRepo.findAll();
+//
+//		Map<String, Object> response = new LinkedHashMap<>();
+//		response.put("skills", all);
+//		return ResponseEntity.ok(response);
+//
+//	}
+    
     @PostMapping
     public Skill addSkill(@RequestBody Skill skill) {
         return skillRepo.save(skill);
