@@ -23,6 +23,8 @@ import com.taskbackend1.repository.EmployeeRepository;
 import com.taskbackend1.repository.SkillRepository;
 import com.taskbackend1.repository.WingRepository;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/employees")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -41,7 +43,7 @@ public class EmployeeController {
     private DepartmentRepository deptRepo;
 
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee) {
 
         Wing wing = wingRepo.findById(employee.getWing().getId())
                 .orElseThrow(() -> new RuntimeException("Wing not found"));
@@ -80,7 +82,7 @@ public class EmployeeController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails) {
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id,@Valid @RequestBody Employee employeeDetails) {
         Employee existingEmployee = employeeRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Employee not found with id " + id));
 
